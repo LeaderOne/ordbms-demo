@@ -77,7 +77,7 @@
 					<url>jdbc:postgresql://localhost:32768/tool_share</url>
 					<user>postgres</user>
 					<password>postgres</password>
-					<skip>true</skip>
+					<skip>false</skip>
 				</configuration>
 				<dependencies>
 					<dependency>

@@ -9,42 +9,9 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "saw", schema = "public", catalog = "tool_share")
-public class SawEntity {
-    private Long toolId;
-    private String toolName;
-    private String toolBrand;
+public class SawEntity extends AbstractToolEntity {
     private BigDecimal kerf;
     private Boolean abrasive;
-
-    @Id
-    @Column(name = "tool_id", nullable = false)
-    public Long getToolId() {
-        return toolId;
-    }
-
-    public void setToolId(Long toolId) {
-        this.toolId = toolId;
-    }
-
-    @Basic
-    @Column(name = "tool_name", nullable = true, length = -1)
-    public String getToolName() {
-        return toolName;
-    }
-
-    public void setToolName(String toolName) {
-        this.toolName = toolName;
-    }
-
-    @Basic
-    @Column(name = "tool_brand", nullable = true, length = -1)
-    public String getToolBrand() {
-        return toolBrand;
-    }
-
-    public void setToolBrand(String toolBrand) {
-        this.toolBrand = toolBrand;
-    }
 
     @Basic
     @Column(name = "kerf", nullable = true, precision = 2)

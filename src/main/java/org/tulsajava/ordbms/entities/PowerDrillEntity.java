@@ -9,10 +9,11 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "power_drill", schema = "public", catalog = "tool_share")
-public class PowerDrillEntity {
+public class PowerDrillEntity extends AbstractToolEntity {
     private Long toolId;
     private String toolName;
     private String toolBrand;
+    private BigDecimal capacity;
     private BigDecimal rentalPrice;
     private BigDecimal bitSizeMin;
     private BigDecimal bitSizeMax;
@@ -56,6 +57,17 @@ public class PowerDrillEntity {
     public void setRentalPrice(BigDecimal rentalPrice) {
         this.rentalPrice = rentalPrice;
     }
+
+    @Basic
+    @Column(name = "capacity", nullable = true, precision = 4)
+    public BigDecimal getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(BigDecimal capacity) {
+        this.capacity = capacity;
+    }
+
 
     @Basic
     @Column(name = "bit_size_min", nullable = true, precision = 4)

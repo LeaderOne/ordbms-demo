@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.tulsajava.ordbms.entities.ToolsEntity;
 import org.tulsajava.ordbms.repo.ToolRepository;
 import org.tulsajava.ordbms.repo.ToolsRepo;
+import org.tulsajava.ordbms.ui.Tool;
 
 @SpringComponent
 @UIScope
+@Tool(ToolsEntity.class)
 public class BasicToolsEditor extends ToolsEntityEditor<ToolsEntity> {
 
     @Autowired

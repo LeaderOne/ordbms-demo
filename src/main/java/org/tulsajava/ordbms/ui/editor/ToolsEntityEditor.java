@@ -8,12 +8,13 @@ import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.tulsajava.ordbms.entities.AbstractToolEntity;
 import org.tulsajava.ordbms.entities.ToolsEntity;
 import org.tulsajava.ordbms.repo.ToolRepository;
 import org.tulsajava.ordbms.repo.ToolsRepo;
 
 
-public abstract class ToolsEntityEditor<T extends ToolsEntity> extends VerticalLayout {
+public abstract class ToolsEntityEditor<T extends AbstractToolEntity> extends VerticalLayout {
     private final ToolRepository<T> toolsRepo;
 
     private T currentToolEntity;

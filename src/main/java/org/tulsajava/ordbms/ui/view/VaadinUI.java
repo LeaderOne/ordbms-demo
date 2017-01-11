@@ -1,4 +1,4 @@
-package org.tulsajava.ordbms.ui;
+package org.tulsajava.ordbms.ui.view;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.data.util.BeanItemContainer;
@@ -8,14 +8,15 @@ import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
+import org.tulsajava.ordbms.entities.AbstractToolEntity;
 import org.tulsajava.ordbms.entities.ToolsEntity;
 import org.tulsajava.ordbms.repo.ToolRepository;
 import org.tulsajava.ordbms.repo.ToolsRepo;
 import org.tulsajava.ordbms.ui.editor.ToolsEntityEditor;
 
 
-public class VaadinUI<T> extends UI {
-    private final ToolRepository toolsRepo;
+public abstract class VaadinUI<T extends AbstractToolEntity> extends VerticalLayout {
+    private final ToolRepository<T> toolsRepo;
     private final ToolsEntityEditor toolsEntityEditor;
 
 
@@ -23,7 +24,7 @@ public class VaadinUI<T> extends UI {
     private final TextField filter;
     private final Button addNewBtn;
 
-    public VaadinUI(ToolRepository repo, ToolsEntityEditor toolsEntityEditor) {
+    public VaadinUI(ToolRepository<T> repo, ToolsEntityEditor toolsEntityEditor) {
         this.toolsRepo = repo;
         this.toolsEntityEditor = toolsEntityEditor;
 
@@ -32,12 +33,11 @@ public class VaadinUI<T> extends UI {
         this.addNewBtn = new Button("New tool", FontAwesome.PLUS);
     }
 
-    @Override
     protected void init(VaadinRequest vaadinRequest) {
         //build layout
         HorizontalLayout actions = new HorizontalLayout(filter, addNewBtn);
         VerticalLayout mainLayout = new VerticalLayout(actions, grid, toolsEntityEditor);
-        setContent(mainLayout);
+        addComponent(mainLayout);
 
         //Configure layouts and components
         actions.setSpacing(true);
@@ -45,7 +45,7 @@ public class VaadinUI<T> extends UI {
         mainLayout.setSpacing(true);
 
         grid.setHeight(300, Unit.PIXELS);
-        grid.setColumns("toolId", "toolName", "toolBrand");
+        grid.setColumns(getColumns());
 
         filter.setInputPrompt("Filter by tool name");
 
@@ -59,12 +59,12 @@ public class VaadinUI<T> extends UI {
             if (e.getSelected().isEmpty()) {
                 toolsEntityEditor.setVisible(false);
             } else {
-                toolsEntityEditor.editTool((ToolsEntity) grid.getSelectedRow());
+                toolsEntityEditor.editTool((AbstractToolEntity) grid.getSelectedRow());
             }
         });
 
         //Instantiate and edit new ToolsEntity the new button is clicked
-        addNewBtn.addClickListener(e -> toolsEntityEditor.editTool(new ToolsEntity()));
+        addNewBtn.addClickListener(e -> toolsEntityEditor.editTool(getToolEntity()));
 
         // Listen to changes made by the editor, refresh data from backend
         toolsEntityEditor.setChangeHandler(() -> {
@@ -75,11 +75,17 @@ public class VaadinUI<T> extends UI {
         listTools(null);
     }
 
-    private void listTools(String toolName) {
+    public abstract String[] getColumns();
+
+    public void listTools(String toolName) {
         if (StringUtils.isEmpty(toolName)) {
-            grid.setContainerDataSource(new BeanItemContainer<>(ToolsEntity.class, toolsRepo.findAll()));
+            grid.setContainerDataSource(new BeanItemContainer(getConcreteClass(), toolsRepo.findAll()));
         } else {
-            grid.setContainerDataSource(new BeanItemContainer<>(ToolsEntity.class, toolsRepo.findByToolNameStartsWithIgnoringCase(toolName)));
+            grid.setContainerDataSource(new BeanItemContainer(getConcreteClass(), toolsRepo.findByToolNameStartsWithIgnoringCase(toolName)));
         }
     }
+
+    protected abstract Class<?> getConcreteClass();
+
+    public abstract T getToolEntity();
 }

@@ -57,7 +57,7 @@ CREATE TABLE power_drill (
   bit_size_min DECIMAL(10,4),
   bit_size_max DECIMAL(10,4),
   PRIMARY KEY (tool_id)
-) INHERITS (tools, tool_rentals);
+) INHERITS (drill, tool_rentals);
 
 ALTER TABLE power_drill OWNER TO tool_user;
 
